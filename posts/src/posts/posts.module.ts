@@ -1,14 +1,15 @@
+import { Module } from '@nestjs/common';
+import { PostsService } from './posts.service';
+import { PostsResolver } from './posts.resolver';
+import { GraphQLModule } from '@nestjs/graphql';
 import {
   ApolloFederationDriver,
   ApolloFederationDriverConfig,
 } from '@nestjs/apollo';
-import { Module } from '@nestjs/common';
-import { GraphQLModule } from '@nestjs/graphql';
 import { UsersResolver } from './users.resolver';
-import { UsersService } from './users.service';
-
+//dawd
 @Module({
-  providers: [UsersResolver, UsersService],
+  providers: [PostsResolver, UsersResolver, PostsService],
   imports: [
     GraphQLModule.forRoot<ApolloFederationDriverConfig>({
       driver: ApolloFederationDriver,
@@ -16,4 +17,4 @@ import { UsersService } from './users.service';
     }),
   ],
 })
-export class UsersModule {}
+export class PostsModule {}

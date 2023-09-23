@@ -1,34 +1,17 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import { Args, ID, Query, Resolver, ResolveReference } from '@nestjs/graphql';
 import { UsersService } from './users.service';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserInput } from './dto/update-user.input';
 
 @Resolver('User')
 export class UsersResolver {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private usersService: UsersService) {}
 
-  @Mutation('createUser')
-  create(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return this.usersService.create(createUserInput);
+  @Query()
+  getUser(@Args({ name: 'id', type: () => ID }) id: number) {
+    return this.usersService.findById(id);
   }
 
-  @Query('users')
-  findAll() {
-    return this.usersService.findAll();
-  }
-
-  @Query('user')
-  findOne(@Args('id') id: number) {
-    return this.usersService.findOne(id);
-  }
-
-  @Mutation('updateUser')
-  update(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    return this.usersService.update(updateUserInput.id, updateUserInput);
-  }
-
-  @Mutation('removeUser')
-  remove(@Args('id') id: number) {
-    return this.usersService.remove(id);
+  @ResolveReference()
+  resolveReference(reference: { __typename: string; id: number }) {
+    return this.usersService.findById(reference.id);
   }
 }
